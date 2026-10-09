@@ -2298,7 +2298,7 @@ void AM_Drawer (void)
     AM_drawPlayers();
     if (cheating==2)
 	AM_drawThings(THINGCOLORS, THINGRANGE);
-    if (crispy->ap_automapicons && !crispy->automapoverlay)
+    if (crispy->ap_automapicons)
     {
         AM_drawLocations((plr->powers[pw_allmap] && crispy->ap_automapicons == 1) || crispy->ap_automapicons == 2);
     }
