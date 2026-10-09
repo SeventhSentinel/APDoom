@@ -30,8 +30,8 @@
 #define ORIGWIDTH  320 // [crispy]
 #define ORIGHEIGHT 200 // [crispy]
 
-#define MAXWIDTH  (ORIGWIDTH << 2) // [crispy]
-#define MAXHEIGHT (ORIGHEIGHT << 1) // [crispy]
+#define MAXWIDTH  (ORIGWIDTH << 6) // [sev] octores + [crispy] widescreen
+#define MAXHEIGHT (ORIGHEIGHT << 5) // [sev] octores
 
 extern int SCREENWIDTH;
 extern int SCREENHEIGHT;
@@ -43,7 +43,7 @@ void I_ToggleVsync (void); // [crispy] calls native SDL vsync toggle
 // Screen height used when aspect_ratio_correct=true.
 
 #define ORIGHEIGHT_4_3 240 // [crispy]
-#define MAXHEIGHT_4_3 (ORIGHEIGHT_4_3 << 1) // [crispy]
+#define MAXHEIGHT_4_3 (ORIGHEIGHT_4_3 << 5) // [sev] octores
 
 extern int SCREENHEIGHT_4_3;
 

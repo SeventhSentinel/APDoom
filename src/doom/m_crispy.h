@@ -40,6 +40,7 @@ extern multiitem_t multiitem_ap_levelselectorder[NUM_AP_LEVELSELECTORDER];
 extern multiitem_t multiitem_ap_filters[];
 extern multiitem_t multiitem_demotimerdir[];
 extern multiitem_t multiitem_freelook[NUM_FREELOOKS];
+extern multiitem_t multiitem_hires[NUM_HIRES]; // [sev] octores
 extern multiitem_t multiitem_jump[NUM_JUMPS];
 extern multiitem_t multiitem_sndchannels[4];
 extern multiitem_t multiitem_secretmessage[NUM_SECRETMESSAGE];

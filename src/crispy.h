@@ -272,6 +272,16 @@ enum
     NUM_FREELOOKS_HH
 };
 
+// [sev] octores
+enum
+{
+    HIRES_OFF,
+    HIRES_DOUBLE,
+    HIRES_QUAD,	// [sev] octores
+	HIRES_OCTO,	// [sev] octores
+    NUM_HIRES
+};
+
 enum
 {
     JUMP_OFF,

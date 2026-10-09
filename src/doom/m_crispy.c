@@ -131,6 +131,15 @@ multiitem_t multiitem_freelook[NUM_FREELOOKS] =
     {FREELOOK_LOCK, "lock"},
 };
 
+// [sev] octores
+multiitem_t multiitem_hires[NUM_HIRES] =
+{
+    {HIRES_OFF, "original"},
+    {HIRES_DOUBLE, "2x"},
+    {HIRES_QUAD, "4x (Slow)"},	// [sev] octores
+    {HIRES_OCTO, "8x (Slowest)"},	// [sev] octores
+};
+
 multiitem_t multiitem_jump[NUM_JUMPS] =
 {
     {JUMP_OFF, "off"},
@@ -214,6 +223,9 @@ static void ChangeSettingEnum(int *setting, int choice, int num_values)
 
     *setting %= num_values;
 }
+
+// [sev] move this up here
+static int hookchoice;
 
 void M_CrispyToggleAutomapstats(int choice)
 {
@@ -490,7 +502,9 @@ void M_CrispyToggleFullsounds(int choice)
 
 static void M_CrispyToggleHiresHook (void)
 {
-    crispy->hires = !crispy->hires;
+    // [sev] octores
+    //crispy->hires = !crispy->hires;
+    ChangeSettingEnum(&crispy->hires, hookchoice, NUM_HIRES);
 
     // [crispy] re-initialize framebuffers, textures and renderer
     I_ReInitGraphics(REINIT_FRAMEBUFFERS | REINIT_TEXTURES | REINIT_ASPECTRATIO);
@@ -506,7 +520,9 @@ static void M_CrispyToggleHiresHook (void)
 
 void M_CrispyToggleHires(int choice)
 {
-    choice = 0;
+    // [sev] octores
+    //choice = 0;
+    hookchoice = choice;
 
     crispy->post_rendering_hook = M_CrispyToggleHiresHook;
 }
@@ -679,7 +695,6 @@ void M_CrispyToggleVsync(int choice)
     crispy->post_rendering_hook = M_CrispyToggleVsyncHook;
 }
 
-static int hookchoice;
 static void M_CrispyToggleWidescreenHook (void)
 {
     ChangeSettingEnum(&crispy->widescreen, hookchoice, NUM_RATIOS);

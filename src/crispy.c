@@ -26,7 +26,7 @@ static crispy_t crispy_s = {
 	0,
 	.extautomap = 1,
 	.gamma = 9,  // default level is "OFF" for intermediate gamma levels
-	.hires = 1,
+	.hires = 3,
 	.soundfix = 1,
 #ifdef CRISPY_TRUECOLOR
 	.smoothlight = 1,
