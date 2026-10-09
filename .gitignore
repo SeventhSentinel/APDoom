@@ -72,3 +72,4 @@ APHERETIC.WAD.bak
 # clangd settings
 /.cache/
 compile_commands.json
+CMakePresets.json
