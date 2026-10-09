@@ -32,6 +32,7 @@
 #include "doomstat.h"
 
 #include "dstrings.h"
+#include "r_state.h"
 #include "sounds.h"
 
 #include "d_iwad.h"
@@ -225,10 +226,12 @@ boolean D_Display (void)
       case GS_LEVEL:
 	if (!gametic)
 	    break;
+
 	if (automapactive && !crispy->automapoverlay)
 	{
 	    // [crispy] update automap while playing
 	    R_RenderPlayerView (&players[displayplayer]);
+        
 	    AM_Drawer ();
 	}
 	if (wipe || (viewheight != SCREENHEIGHT && fullscreen))
@@ -260,9 +263,17 @@ boolean D_Display (void)
     I_UpdateNoBlit ();
     
     // draw the view directly
-    if (gamestate == GS_LEVEL && (!automapactive || crispy->automapoverlay) && gametic)
+    if (gamestate == GS_LEVEL && ((!automapactive && !crispy->automapoverlay) || crispy->automapoverlay) && gametic)
     {
 	R_RenderPlayerView (&players[displayplayer]);
+
+    // [sev] map overlay background
+	if (automapactive && crispy->automapoverlay)
+	{
+		dp_translucent = true;
+		V_DrawFilledBox(0, 0, SCREENWIDTH, (screenblocks >= 11) ? SCREENHEIGHT : SCREENHEIGHT - (32 << crispy->hires), 0);
+		dp_translucent = false;    
+	}
 
         // [crispy] Crispy HUD
         if (screenblocks >= CRISPY_HUD)

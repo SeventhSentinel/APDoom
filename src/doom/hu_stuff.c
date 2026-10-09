@@ -1509,7 +1509,7 @@ void HU_Ticker(void)
     if (automapactive)
     {
 	// [crispy] move map title to the bottom
-	if (crispy->automapoverlay && screenblocks >= CRISPY_HUD - 1)
+	if (crispy->automapoverlay && screenblocks == 11)   // [sev] make it 11 so sevhud looks better
 	    w_title.y = HU_TITLEY + ST_HEIGHT;
 	else
 	    w_title.y = HU_TITLEY;
