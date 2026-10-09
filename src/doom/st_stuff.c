@@ -1978,7 +1978,7 @@ void ST_drawWidgets(boolean refresh)
     st_fragson = deathmatch && st_statusbaron; 
 
 
-	if ((st_crispyhud && (screenblocks > 11)) && (!automapactive))
+	if ((st_crispyhud && (screenblocks > 11)) && (!automapactive || crispy->automapoverlay))
 	{
 		// [sev] Draw left side of transparent status bar
 		if (W_CheckNumForName("STBARTLF") >= 0)
@@ -2095,7 +2095,7 @@ void ST_drawWidgets(boolean refresh)
 	STlib_updateMultIcon(&w_arms[i], refresh);
 
 	// [sev] If available, draw transparent face background
-    if ((W_CheckNumForName("STBARTFC") >= 0) && (st_crispyhud && (screenblocks % 3 == 0)) && (!automapactive))
+    if ((W_CheckNumForName("STBARTFC") >= 0) && (st_crispyhud && (screenblocks % 3 == 0)) && (!automapactive || crispy->automapoverlay))
 	{
 		V_DrawPatch(ST_FX, ST_Y, sbartfacebg);
 	}
