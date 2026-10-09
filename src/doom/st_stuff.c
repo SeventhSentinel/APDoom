@@ -247,6 +247,9 @@ static boolean		st_armson;
 // !deathmatch
 static boolean		st_fragson; 
 
+// [sev] Are we using the default stbar or not?
+static boolean		st_default;
+
 // main bar left
 static patch_t*		sbar;
 
@@ -276,6 +279,36 @@ static patch_t*		armsbg;
 
 // weapon ownership patches
 static patch_t*		arms[6][2]; 
+
+// [sev] transparent status bar left
+static patch_t*		sbartl;
+
+// [sev] transparent status bar right
+static patch_t*		sbartr;
+
+// [sev] transparent status bar face background
+static patch_t*		sbartfacebg;
+
+// [sev] transparent status bar "arms" text
+static patch_t*		sbartarms;
+
+// [sev] transparent status bar "frag" text
+static patch_t*		sbartfrag;
+
+// [sev] transparent status bar left (default)
+static patch_t*		sbartl_default;
+
+// [sev] transparent status bar right (default)
+static patch_t*		sbartr_default;
+
+// [sev] transparent status bar face background (default)
+// static patch_t*		sbartfacebg_default;
+
+// [sev] transparent status bar "arms" text (default)
+static patch_t*		sbartarms_default;
+
+// [sev] transparent status bar "frag" text (default)
+static patch_t*		sbartfrag_default;
 
 // ready-weapon widget
 static st_number_t	w_ready;
@@ -1944,6 +1977,58 @@ void ST_drawWidgets(boolean refresh)
     // used by w_frags widget
     st_fragson = deathmatch && st_statusbaron; 
 
+
+	if ((st_crispyhud && (screenblocks > 11)) && (!automapactive))
+	{
+		// [sev] Draw left side of transparent status bar
+		if (W_CheckNumForName("STBARTLF") >= 0)
+		{
+			V_DrawPatch(0 - ST_WIDESCREENDELTA, ST_ARMSBGY, sbartl);
+		}
+		// [sev] Use defaults from BaseAssets.zip/ArchipelagoDoom.wad if using the stock stbar
+		else if (st_default == true)
+		{
+			V_DrawPatch(0 - ST_WIDESCREENDELTA, ST_ARMSBGY, sbartl_default);
+		}
+		// [sev] Draw transparent ARMS text
+		if (st_armson)
+		{
+			if (W_CheckNumForName("STARMST") >= 0)
+			{
+				V_DrawPatch(ST_ARMSBGX, ST_ARMSBGY, sbartarms);
+			}
+			// [sev] Use defaults from BaseAssets.zip/ArchipelagoDoom.wad if using the stock stbar
+			else if (st_default == true)
+			{
+				V_DrawPatch(ST_ARMSBGX, ST_ARMSBGY, sbartarms_default);
+			}
+		}
+		// [sev] Draw transparent FRAG text
+		if (st_fragson)
+		{
+			if (W_CheckNumForName("STFRAGT") >= 0)
+			{
+				V_DrawPatch(ST_ARMSBGX, ST_ARMSBGY, sbartfrag);
+			}
+			// [sev] Use defaults from BaseAssets.zip/ArchipelagoDoom.wad if using the stock stbar
+			else if (st_default == true)
+			{
+				V_DrawPatch(ST_ARMSBGX, ST_ARMSBGY, sbartfrag_default);
+			}
+		}
+		// [sev] Draw right side of transparent status bar
+		if (W_CheckNumForName("STBARTRT") >= 0)
+		{
+			V_DrawPatch(320 + ST_WIDESCREENDELTA, ST_ARMSBGY, sbartr);
+		}
+		// [sev] Use defaults from BaseAssets.zip/ArchipelagoDoom.wad if using the stock stbar
+		else if (st_default == true)
+		{
+			V_DrawPatch(320 + ST_WIDESCREENDELTA, ST_ARMSBGY, sbartr_default);
+		}
+	}
+
+
     dp_translation = ST_WidgetColor(hudcolor_ammo);
     STlib_updateNum(&w_ready, refresh);
     dp_translation = NULL;
@@ -2009,13 +2094,23 @@ void ST_drawWidgets(boolean refresh)
     for (i=0;i<6;i++)
 	STlib_updateMultIcon(&w_arms[i], refresh);
 
+	// [sev] If available, draw transparent face background
+    if ((W_CheckNumForName("STBARTFC") >= 0) && (st_crispyhud && (screenblocks % 3 == 0)) && (!automapactive))
+	{
+		V_DrawPatch(ST_FX, ST_Y, sbartfacebg);
+	}
+
     // [crispy] draw the actual face widget background
     if (st_crispyhud && (screenblocks % 3 == 0))
     {
 		if (netgame)
 		V_DrawPatch(ST_FX, ST_Y + 1, faceback[displayplayer]);
 		else
-		V_CopyRect(ST_FX + WIDESCREENDELTA, 1, st_backing_screen, SHORT(faceback[0]->width), ST_HEIGHT - 1, ST_FX + WIDESCREENDELTA, ST_Y + 1);
+		// [sev] Don't draw part of the status bar behind the face if transparent stbar is available
+		if (!(W_CheckNumForName("STBARTFC") >= 0))
+		{
+			V_CopyRect(ST_FX + WIDESCREENDELTA, 1, st_backing_screen, SHORT(faceback[0]->width), ST_HEIGHT - 1, ST_FX + WIDESCREENDELTA, ST_Y + 1);
+		}
     }
 
     STlib_updateMultIcon(&w_faces, refresh);
@@ -2125,6 +2220,43 @@ static void ST_loadUnloadGraphics(load_callback_t callback)
     // arms background
     callback(DEH_String("STARMS"), &armsbg);
 
+    // [sev] transparent status bar left
+    if (W_CheckNumForName("STBARTLF") >= 0)
+	{
+	    callback(DEH_String("STBARTLF"), &sbartl);
+	}
+
+    // [sev] transparent status bar right
+    if (W_CheckNumForName("STBARTRT") >= 0)
+	{
+	    callback(DEH_String("STBARTRT"), &sbartr);
+	}
+
+    // [sev] transparent status bar face background
+    if (W_CheckNumForName("STBARTFC") >= 0)
+	{
+	    callback(DEH_String("STBARTFC"), &sbartfacebg);
+	}
+
+	// [sev] transparent status bar "arms" text
+    if (W_CheckNumForName("STARMST") >= 0)
+	{
+	    callback(DEH_String("STARMST"), &sbartarms);
+	}
+
+	// [sev] transparent status bar "frag" text
+    if (W_CheckNumForName("STFRAGT") >= 0)
+	{
+	    callback(DEH_String("STFRAGT"), &sbartfrag);
+	}
+
+	// [sev] transparent status bar defaults for stock stbar
+	callback(DEH_String("STBAR_LF"), &sbartl_default);
+	callback(DEH_String("STBAR_RT"), &sbartr_default);
+	// callback(DEH_String("STBAR_FC"), &sbartfacebg_default);
+	callback(DEH_String("STARMS_"), &sbartarms_default);
+	callback(DEH_String("STFRAG_"), &sbartfrag_default);
+
     // arms ownership widgets
     for (i=0; i<6; i++)
     {
@@ -2152,9 +2284,16 @@ static void ST_loadUnloadGraphics(load_callback_t callback)
         // [AP] we include a community-made widescreen variant of the doom status bar
         // but we only want to overwrite specifically the original doom/doom2 version
         if (!strcmp(W_HashLumpName("STBAR"), "92ae7a87a669fd5c611c2c0b24ca60b11d53e293"))
+		{
             callback(DEH_String("STBAR_W"), &sbar);
+			// [sev] Track this for transparent status bar purposes
+			st_default = true;
+		}
         else
+		{
             callback(DEH_String("STBAR"), &sbar);
+			st_default = false;
+		}
 
         sbarr = NULL;
     }
